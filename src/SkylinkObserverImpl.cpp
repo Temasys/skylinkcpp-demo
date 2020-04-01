@@ -205,8 +205,8 @@ void SkylinkObserverImpl::onInRoom(const std::string& peerId, const RoomMetadata
 void SkylinkObserverImpl::onRemoteVideoMedia(const std::string& peerId, VideoMedia_Ptr media)
 {
   std::cout << "Remote video media received. PeerID: " << peerId 
-            << " mediaId: " << media->getId() 
-            // << " kind: " << media->getMediaInfo()->mediaType_ 
+            << " mediaId: "  << media->getId() 
+            << " streamId: " << media->getStreamId() 
             << std::endl << std::flush;
 
   // Store the media
@@ -228,7 +228,10 @@ void SkylinkObserverImpl::onRemoteVideoMedia(const std::string& peerId, VideoMed
 }
 
 void SkylinkObserverImpl::onRemoteAudioMedia(const std::string& peerId, AudioMedia_Ptr media) {
-  std::cout << "Remote audio media received. PeerID: " << peerId << " mediaId: " << media->getId() << std::endl << std::flush;
+  std::cout << "Remote audio media received. PeerID: " << peerId 
+            << " mediaId: "  << media->getId() 
+            << " streamId: " << media->getStreamId() 
+            << std::endl << std::flush;
 
   // Store the media
   auto peerMap = audio_media_.find(peerId);
