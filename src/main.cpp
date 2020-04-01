@@ -27,6 +27,15 @@
 
 using namespace Temasys;
 
+#define EXIT_CODE_OK                          000
+#define EXIT_CODE_ARG_BAD                     001
+#define EXIT_CODE_ARG_MISSING                 002
+#define EXIT_CODE_AUDIO_NO_DEVICES            101
+#define EXIT_CODE_AUDIO_DEVICE_START_FAIL     101
+#define EXIT_CODE_VIDEO_NO_DEVICES            201
+#define EXIT_CODE_VIDEO_DEVICE_START_FAIL     201
+
+
 bool stopProgram = false;
 
 void signalHandler(int signal)
@@ -134,14 +143,14 @@ int main(int argc, char * argv[])
       default:
         std::cout << "Unsupported argument(s)" << std::endl
                   << "Usage : " << optionList  << std::endl << std::flush;
-        exit(1);
+        exit(EXIT_CODE_ARG_BAD);
         break;
     }  
   }
 
   if (appKey.empty() || secret.empty() || roomName.empty()) {
     std::cout << "Missing arguments. Usage:" << std::endl << '\t' << optionList << std::flush;
-    exit(2);
+    exit(EXIT_CODE_ARG_MISSING);
   }
 
   // Print SDK version
@@ -187,26 +196,40 @@ int main(int argc, char * argv[])
   videoConstraints.maxWidth = 640;
   videoConstraints.maxFramerate = 20;
 
-  // Capture audio & video
+  // Capture audio
   AudioMedia_Ptr microphone;
-  VideoMedia_Ptr camera;
   if (sendAudio) {
     if (audioCapturers.empty()) {
       std::cout << "Audio enabled, but no audio capture devices available. Exiting." << std::endl << std::flush;
-      exit(11);
+      exit(EXIT_CODE_AUDIO_NO_DEVICES);
     }
+
     std::cout << "Starting local microphone" << std::endl << std::flush;
                  mediaFactory->setAudioInputDevice(audioCapturers.front());
     microphone = mediaFactory->createMicrophoneMedia();
+    if (!microphone) {
+      std::cout << "Failed to start local microphone. Exiting." << std::endl << std::flush;
+      exit(EXIT_CODE_AUDIO_DEVICE_START_FAIL);
+    }
+
     microphone->registerMediaObserver(observer->mediaObserver_);
   }
+
+  // Capture video
+  VideoMedia_Ptr camera;
   if (sendVideo) {
     if (videoCapturers.empty()) {
       std::cout << "Video enabled, but no video capture devices available. Exiting." << std::endl << std::flush;
-      exit(12);
+      exit(EXIT_CODE_VIDEO_NO_DEVICES);
     }
+
     std::cout << "Starting local camera" << std::endl << std::flush;
     camera = mediaFactory->createCameraMedia(videoCapturers.front(), videoConstraints);
+    if (!camera) {
+      std::cout << "Failed to start local camera. Exiting." << std::endl << std::flush;
+      exit(EXIT_CODE_VIDEO_DEVICE_START_FAIL);
+    }
+
     camera->registerMediaObserver(observer->mediaObserver_);
   }
 
@@ -325,5 +348,5 @@ int main(int argc, char * argv[])
   skylink     = NULL;
 
   std::cout << "Exiting SampleApp." << std::endl;
-  return 0;
+  return EXIT_CODE_OK;
 }
