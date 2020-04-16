@@ -65,6 +65,7 @@ namespace Temasys { // TODO: put sample code outside of namespace
     void onRemoteAudioMedia(const std::string& peerId, AudioMedia_Ptr media) override;
     void onMessage(const std::string& peerId, const Message& message) override;
     void onRecordingEvent(const RecordingEvent& event) override;
+    void onSkylinkError(const Error& error) override;
 
     std::string self_peer_id_;
 

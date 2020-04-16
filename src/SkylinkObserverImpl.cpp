@@ -273,4 +273,8 @@ void SkylinkObserverImpl::onRecordingEvent(const Temasys::RecordingEvent& event)
             << std::endl << std::flush;
 }
 
+void SkylinkObserverImpl::onSkylinkError(const Error& error) {
+  std::cout << "Received an error from Skylink. Code: " << error.code << ", desc: " << error.desc << std::endl << std::flush;
+}
+
 }
