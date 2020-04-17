@@ -224,9 +224,11 @@ int main(int argc, char * argv[])
     }
 
     std::cout << "Starting local camera" << std::endl << std::flush;
-    camera = mediaFactory->createCameraMedia(videoCapturers.front(), videoConstraints);
+    Error err;
+    camera = mediaFactory->createCameraMedia(videoCapturers.front(), videoConstraints, &err);
     if (!camera) {
-      std::cout << "Failed to start local camera. Exiting." << std::endl << std::flush;
+      std::cout << "Failed to start local camera. Error code: " << err.code << ", desc: " << err.desc << std::endl << std::flush;
+      std::cout << "Exiting." << std::endl << std::flush;
       exit(EXIT_CODE_VIDEO_DEVICE_START_FAIL);
     }
 
