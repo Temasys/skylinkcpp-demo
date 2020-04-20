@@ -91,6 +91,7 @@ int main(int argc, char * argv[])
   LogLevel    webrtcLogLevel  = LogLevel::SL_NONE;
   bool        sendAudio       = true;
   bool        sendVideo       = true;
+  Error err;
 
   std::string optionList = "skylinkcpp-demo"
                            " -k {appKey}"
@@ -200,7 +201,7 @@ int main(int argc, char * argv[])
   AudioMedia_Ptr microphone;
   if (sendAudio) {
     if (audioCapturers.empty()) {
-      std::cout << "Audio enabled, but no audio capture devices available. Exiting." << std::endl << std::flush;
+      std::cerr << "Audio enabled, but no audio capture devices available. Exiting." << std::endl << std::flush;
       exit(EXIT_CODE_AUDIO_NO_DEVICES);
     }
 
@@ -208,7 +209,7 @@ int main(int argc, char * argv[])
                  mediaFactory->setAudioInputDevice(audioCapturers.front());
     microphone = mediaFactory->createMicrophoneMedia();
     if (!microphone) {
-      std::cout << "Failed to start local microphone. Exiting." << std::endl << std::flush;
+      std::cerr << "Failed to start local microphone. Exiting." << std::endl << std::flush;
       exit(EXIT_CODE_AUDIO_DEVICE_START_FAIL);
     }
 
@@ -219,15 +220,14 @@ int main(int argc, char * argv[])
   VideoMedia_Ptr camera;
   if (sendVideo) {
     if (videoCapturers.empty()) {
-      std::cout << "Video enabled, but no video capture devices available. Exiting." << std::endl << std::flush;
+      std::cerr << "Video enabled, but no video capture devices available. Exiting." << std::endl << std::flush;
       exit(EXIT_CODE_VIDEO_NO_DEVICES);
     }
 
     std::cout << "Starting local camera" << std::endl << std::flush;
-    Error err;
     camera = mediaFactory->createCameraMedia(videoCapturers.front(), videoConstraints, &err);
     if (!camera) {
-      std::cout << "Failed to start local camera. Error code: " << err.code << ", desc: " << err.desc << std::endl << std::flush;
+      std::cerr << "Failed to start local camera. Error code: " << err.code << ", desc: " << err.desc << std::endl << std::flush;
       std::cout << "Exiting." << std::endl << std::flush;
       exit(EXIT_CODE_VIDEO_DEVICE_START_FAIL);
     }
@@ -269,13 +269,15 @@ int main(int argc, char * argv[])
   // microphone->unmute();
 
   ////////////////////////////////////////////////////////////
-  // Mute and unmute video media
-  // sleep(10);
+  // Mute and unmute video media, with error management
+  // sleep(3);
   // std::cout << "Muting local video." << std::endl << std::flush;
-  // camera->stop();
-  // sleep(10);
+  // err = camera->mute();
+  // if (!err.ok()) std::cerr << "Failed to mute camera. Error code: " << err.code << ", desc: " << err.desc  << std::endl << std::flush;
+  // sleep(3);
   // std::cout << "Unmuting local video." << std::endl << std::flush;
-  // camera->unmute();
+  // err = camera->unmute();
+  // if (!err.ok()) std::cerr << "Failed to unmute camera. Error code: " << err.code << ", desc: " << err.desc  << std::endl << std::flush;
 
   ////////////////////////////////////////////////////////////
   // Stop sending and restart sending audio
