@@ -7,7 +7,8 @@ fi
 source $(dirname $0)/common.sh
 
 # Download SkylinkCPP latest
-SKYLINKCPP_URL="https://temasys-cdn.s3.amazonaws.com/skylink/skylinksdk/cpp/2.0.0/skylinkcpp-2.0.0.tar.gz"
+SKYLINKCPP_VERSION="2.0.1"
+SKYLINKCPP_URL="https://temasys-cdn.s3.amazonaws.com/skylink/skylinksdk/cpp/${SKYLINKCPP_VERSION}/skylinkcpp-${SKYLINKCPP_VERSION}.tar.gz"
 SKYLINKCPP_ARCHIVE=$(basename $SKYLINKCPP_URL)
 cd $PROJECT_ROOT_DIR
 mkdir skylinkcpp
