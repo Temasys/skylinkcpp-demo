@@ -341,11 +341,12 @@ int main(int argc, char * argv[])
   // Skylink MUST be released last, as it hold thread that some destructors will run on
   if (camera && renderer) camera->removeSink(renderer);
   skylink->unregisterObserver(observer);
-  microphone  = NULL;
-  camera      = NULL;
-  renderer    = NULL;
-  observer    = NULL;
-  skylink     = NULL;
+  microphone    = NULL;
+  camera        = NULL;
+  renderer      = NULL;
+  observer      = NULL;
+  mediaFactory  = NULL;
+  skylink       = NULL;
 
   std::cout << "Exiting SampleApp." << std::endl;
   return EXIT_CODE_OK;
