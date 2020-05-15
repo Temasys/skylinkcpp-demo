@@ -56,3 +56,7 @@ To render the remote audio properly, edit the pulse audio configuration `sudo vi
 default-fragments = 5
 default-fragment-size-msec = 2
 ```
+Then stop the pulseaudio daemon `pulseaudio --kill` and start again `pulseaudio --start` to take effect the changes.
+
+
+If the pulseaudio daemon is not running in the system, application may not start. To fix this, execute `pulseaudio --start` to start the daemon
